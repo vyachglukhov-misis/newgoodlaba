@@ -21,7 +21,7 @@ namespace laba2
     }
 
 
-    public static class Program_Task2
+    public class Program_Task2
     {
         public static int[] StringToMassive(string s)
         {
@@ -65,6 +65,32 @@ namespace laba2
             }
             return new MatrixInfo(posOfMin, matrixMin, matrixMax, posOfMax);
         }
+        public int[] TryParseMatrixSize(string s, string prompt)
+        {
+            bool flag = true;
+            int[] returnedNums = new int[0];
+            do
+            {
+                try
+                {
+                    returnedNums = Regex.Replace(Regex.Replace(s, "[a-zA-Z]", " "), "[ ]+", " ")
+                    .Trim()
+                    .Split()
+                    .Select(int.Parse)
+                    .ToArray();
+                    if (returnedNums.Length == 2)
+                    {
+                        flag = false;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine(prompt);
+                    s = Console.ReadLine();
+                }
+            } while (flag);
+            return returnedNums;
+        }
 
 
         public static void OutputStepMatrix(int[][] matrix)
@@ -99,7 +125,7 @@ namespace laba2
             return matrix;
         }
 
-        public static void Main(string[] args)
+        public static void asd()
         {
             int countOfRows = int.Parse(Console.ReadLine());
             int[][] stepMatrix = new int[countOfRows][];
