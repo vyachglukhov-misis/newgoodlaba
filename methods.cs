@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 namespace methods
 {
@@ -33,6 +34,28 @@ namespace methods
             } while (flag);
             return returnedNums;
         }
+        public string CheckModeFirstTask(string[] lines)
+        {
+            if (lines.Length != 2)
+            {
+                return "incorrect .txt input file";
+            }
+            if (!(lines[0] == "a" || lines[0] == "b")){
+                return "enter correct mode in first line of .txt file";
+            }
+            try
+            {
+                if (lines[1].GetType().GetElementType() == typeof(Int32))
+                {
+                    return "good";
+                }
+            }
+            catch
+            {
+                return "incorect input line of nums in .txt file";
+            }
+            return "good";
+        } 
         public int[] TryParseMatrixRow(string s, string prompt, int countOfColumns)
         {
             bool flag = true;
@@ -62,6 +85,80 @@ namespace methods
                 }
             } while (flag);
             return returnedNums;
+        }
+        public string CheckStepMatrix__fl (string[] lines)
+        {
+            if (lines.Length < 2)
+            {
+                return "enter count of rows and at least one row";
+            }
+            int k = 0;
+            try
+            {
+                for (; k < lines.Length; k++)
+                {
+                    lines[k].Split().Select(int.Parse).ToArray();
+                }
+            }
+            catch
+            {
+                return $"not a number in row #{k + 1} ";
+            }
+            if (lines[0].Split(" ").Length != 1)
+            {
+                return "enter correct count of rows";
+            }
+            if (int.Parse(lines[0]) != lines.Length - 1)
+            {
+                return "first lane in .txt file shows how many rows in step matrix";
+            }
+            return "good";
+            
+        }
+        public string CheckMatrices__fl(string[] lines)
+        {
+            int k = 0;
+            try
+            {
+                for (; k< lines.Length; k++)
+                {
+                    lines[k].Split().Select(int.Parse).ToArray();
+                } 
+            }
+            catch
+            {
+                return $"not a number in row #{k + 1} ";
+            }
+            int[] enteredSizeOfFirstMatrix = lines[0].Split().Select(int.Parse).ToArray();
+            if (enteredSizeOfFirstMatrix.Length != 2)
+            {
+                return "incorrect size of first matrix";
+            }
+            int[] enteredSizeOfSecondMatrix = lines[1 + enteredSizeOfFirstMatrix[0]].Split().Select(int.Parse).ToArray();
+            if (enteredSizeOfSecondMatrix.Length != 2)
+            {
+                return "incorrect size of second matrix";
+            }
+            if (enteredSizeOfFirstMatrix[0] + enteredSizeOfFirstMatrix[0] != lines.Length - 2)
+            {
+                return "count of rows of first matrix or count of rows of second matrix not equals their sizes. recorrect it in file";
+            }
+            for (int i = 0; i < enteredSizeOfFirstMatrix[0]; i++)
+            {
+                if (lines[1+i].Split(" ").Length != enteredSizeOfFirstMatrix[1])
+                {
+                    Console.WriteLine($"{lines[1 + i].Split(" ").Length}", enteredSizeOfFirstMatrix[1]);
+                    return $"row #{i + 1} countains not {enteredSizeOfFirstMatrix[1]} columns in 1st matrix";
+                }
+            }
+            for (int i = 0; i < enteredSizeOfFirstMatrix[0]; i++)
+            {
+                if (lines[enteredSizeOfFirstMatrix[0]+i + 2].Split(" ").Length != enteredSizeOfSecondMatrix[1])
+                {
+                    return $"row #{i+1} countains not {enteredSizeOfSecondMatrix[1]} columns in 2nd matrix";
+                }
+            }
+            return "good";
         }
         public int[] TryParse(string s, string prompt)
         {
@@ -201,7 +298,6 @@ namespace methods
             }
             return summedMatrix;
         }
-
         public int[][] SubstractionMatrix(int[][] matrix1, int[][] matrix2)
         {
             int[][] substractionMatrix = new int[matrix1.Length][];
@@ -235,6 +331,20 @@ namespace methods
             }
             return multipliedMatrix;
         }
+        public int[][] FillStepMatrixByRow(ref int[][] matrix, int countOfRows)
+        {
+            for (int i = 0; i < countOfRows; i++)
+            {
+                int[] enteredRow = TryParse(Console.ReadLine(), "enter the correct row of matrix");
+                matrix[i] = new int[enteredRow.Length];
+
+                for (int j = 0; j < enteredRow.Length; j++)
+                {
+                    matrix[i][j] = enteredRow[j];
+                }
+            }
+            return matrix;
+        }
         public int[][] FillMatrixByRow(ref int[][] matrix, int countOfRows, int countOfColumns)
         {
             for (int i = 0; i < countOfRows; i++)
@@ -249,7 +359,19 @@ namespace methods
             }
             return matrix;
         }
-
+        public int[][] FillMatrixByRow__fl(int[][] matrix, string[] rows)
+        {
+            for (int i= 0; i<matrix.Length; i++)
+            {
+                int[] splittedRow = rows[i].Split(" ").Select(int.Parse).ToArray();
+                matrix[i] = new int[splittedRow.Length];
+                for (int j = 0; j< splittedRow.Length; j++)
+                {
+                    matrix[i][j] = splittedRow[j];
+                }
+            }
+            return matrix;
+        }
         public void OutputStepMatrix(int[][] matrix)
         {
             for (int i = 0; i < matrix.Length; i++)
@@ -261,7 +383,31 @@ namespace methods
                 Console.WriteLine();
             }
         }
-        static MatrixInfo MatrixMaxMin(int[][] matrix)
+        public int[][] ChangeMatrixItem(int[][] matrix, int row, int column, int item)
+        {
+            matrix[row][column] = item;
+            return matrix;
+        }
+        public int[][] FillStepMatrixByRow__fl(int[][] matrix, string[] lines)
+        {
+            for (int i = 0; i<lines.Length-1; i++)
+            {
+                int[] row = lines[i+1].Split(" ").Select(int.Parse).ToArray();
+                matrix[i] = new int[row.Length];
+                for (int j = 0; j< row.Length; j++)
+                {
+                    matrix[i][j] = row[j];
+                }
+            }
+            return matrix;
+        }
+        public int GetRandomInt()
+        {
+            Random GetRandomNum = new Random();
+            int randomInt = GetRandomNum.Next();
+            return randomInt;
+        }
+        public static MatrixInfo MatrixMaxMin(int[][] matrix)
         {
             int matrixMin = 999999999;
             int matrixMax = 0;
@@ -288,5 +434,4 @@ namespace methods
             return new MatrixInfo(posOfMin, matrixMin, matrixMax, posOfMax);
         }
     }
-
 }
